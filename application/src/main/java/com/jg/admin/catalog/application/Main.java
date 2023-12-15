@@ -1,4 +1,4 @@
-package com.jg.admin.catalog;
+package com.jg.admin.catalog.application;
 
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or

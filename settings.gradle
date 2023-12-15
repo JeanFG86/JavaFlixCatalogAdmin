@@ -1,2 +1,5 @@
 rootProject.name = 'JavaCatalogAdmin'
+include 'domain'
+include 'application'
+include 'infrastructure'
 
