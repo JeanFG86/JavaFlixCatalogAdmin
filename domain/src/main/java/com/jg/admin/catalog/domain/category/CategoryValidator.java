@@ -1,5 +1,6 @@
 package com.jg.admin.catalog.domain.category;
 
+import com.jg.admin.catalog.domain.validation.Error;
 import com.jg.admin.catalog.domain.validation.ValidationHandler;
 import com.jg.admin.catalog.domain.validation.Validator;
 
@@ -13,6 +14,9 @@ public class CategoryValidator extends Validator {
 
     @Override
     public void validate() {
-
+        if(this.category.getName() == null){
+            this.validationHandler().append(new Error("'name' should not be null"));
+        }
     }
+
 }
