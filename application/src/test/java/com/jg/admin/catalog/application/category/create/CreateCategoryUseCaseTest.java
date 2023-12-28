@@ -17,18 +17,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
-public class CreateCategoryUseCaseTest extends UseCaseTest {
-
-    @InjectMocks
-    private DefaultCreateCategoryUseCase useCase;
-
-    @Mock
-    private CategoryGateway categoryGateway;
-
-    @Override
-    protected List<Object> getMocks() {
-        return null;
-    }
+public class CreateCategoryUseCaseTest {
 
     @Test
     public void givenAValidCommand_whenCallsCreateCategory_shouldReturnCategoryId() {
@@ -39,10 +28,14 @@ public class CreateCategoryUseCaseTest extends UseCaseTest {
         final var aCommand =
                 CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
 
-        when(categoryGateway.create(any()))
+        final CategoryGateway categoryGateway = Mockito.mock(CategoryGateway.class);
+
+        Mockito.when(categoryGateway.create(any()))
                 .thenAnswer(returnsFirstArg());
 
-        final var actualOutput = useCase.execute(aCommand).get();
+        final var useCase = new DefaultCreateCategoryUseCase(categoryGateway);
+
+        final var actualOutput = useCase.execute(aCommand);
 
         Assertions.assertNotNull(actualOutput);
         Assertions.assertNotNull(actualOutput.id());
