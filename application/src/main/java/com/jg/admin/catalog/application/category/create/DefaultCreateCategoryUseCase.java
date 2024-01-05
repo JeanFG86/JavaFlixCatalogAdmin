@@ -4,9 +4,13 @@ import com.jg.admin.catalog.domain.category.Category;
 import com.jg.admin.catalog.domain.category.CategoryGateway;
 import com.jg.admin.catalog.domain.validation.handler.Notification;
 import com.jg.admin.catalog.domain.validation.handler.ThrowsValidationHandler;
+import io.vavr.API;
 import io.vavr.control.Either;
 
 import java.util.Objects;
+
+import static io.vavr.API.Left;
+import static io.vavr.API.Try;
 
 public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase{
 
@@ -26,10 +30,12 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase{
         final var aCategory = Category.newCategory(aName, aDescription, isActive);
         aCategory.validate(notification);
 
-        if(notification.hasError()){
-
-        }
-
-        return CreateCategoryOutput.from(this.categoryGateway.create(aCategory));
+        return notification.hasError() ? Left(notification) : create(aCategory);
     }
+
+    private Either<Notification, CreateCategoryOutput> create(Category aCategory) {
+        return Try(() -> this.categoryGateway.create(aCategory)).toEither().bimap(Notification::create, CreateCategoryOutput::from);
+    }
+
+
 }
