@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 public class UpdateCategoryUseCaseTest {
 
     @InjectMocks
-    private DefaultCreateCategoryUseCase useCase;
+    private DefaultUpdateCategoryUseCase useCase;
 
     @Mock
     private CategoryGateway categoryGateway;
