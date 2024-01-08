@@ -1,5 +1,6 @@
 package com.jg.admin.catalog.application.category.update;
 
+import com.jg.admin.catalog.application.category.create.CreateCategoryCommand;
 import com.jg.admin.catalog.application.category.create.DefaultCreateCategoryUseCase;
 import com.jg.admin.catalog.domain.category.Category;
 import com.jg.admin.catalog.domain.category.CategoryGateway;
@@ -57,5 +58,27 @@ public class UpdateCategoryUseCaseTest {
                         && Objects.equals(aCategory.getCreatedAt(), aUpdateCategory.getCreatedAt())
                         && aCategory.getUpdatedAt().isBefore(aUpdateCategory.getUpdatedAt())
                         && Objects.isNull(aUpdateCategory.getDeletedAt())));
+    }
+
+    @Test
+    public void givenAInvalidName_whenCallsUpdateCategory_thenReturnDomainException(){
+        final var aCategory = Category.newCategory("Film", null, true);
+        final var expectedId = aCategory.getId();
+        final String expectedName = null;
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
+        final var expectedErrorMessage = "'name' should not be null";
+        final var expectedErrorCount = 1;
+
+        final var aCommand =
+                UpdateCategoryCommand.with(expectedId.getValue(), expectedName, expectedDescription, expectedIsActive);
+
+        when(categoryGateway.findById(eq(expectedId))).thenReturn(Optional.of(aCategory.clone()));
+
+        final var notification = useCase.execute(aCommand).getLeft();
+
+        Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
+        Mockito.verify(categoryGateway, times(0)).update(any());
     }
 }
