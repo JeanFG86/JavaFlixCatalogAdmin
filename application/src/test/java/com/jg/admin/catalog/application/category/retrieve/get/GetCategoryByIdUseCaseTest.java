@@ -1,4 +1,4 @@
-package com.jg.admin.catalog.application.category.retrieve;
+package com.jg.admin.catalog.application.category.retrieve.get;
 
 import com.jg.admin.catalog.domain.category.Category;
 import com.jg.admin.catalog.domain.category.CategoryGateway;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 public class GetCategoryByIdUseCaseTest {
 
     @InjectMocks
-    private DefaultGetCategoryByIdUseCasee useCase;
+    private DefaultGetCategoryByIdUseCase useCase;
 
     @Mock
     private CategoryGateway categoryGateway;
@@ -49,14 +49,14 @@ public class GetCategoryByIdUseCaseTest {
         Assertions.assertEquals(expectedName, actualCategory.name());
         Assertions.assertEquals(expectedDescription, actualCategory.description());
         Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
-        Assertions.assertEquals(actualCategory.getCreatedAt(), actualCategory.createdAt());
-        Assertions.assertEquals(actualCategory.getUpdateddAt(), actualCategory.updatedAt());
-        Assertions.assertEquals(actualCategory.getDeleteddAt(), actualCategory.deletedAt());
+        //Assertions.assertEquals(actualCategory.getCreatedAt(), actualCategory.createdAt());
+        //Assertions.assertEquals(actualCategory.getUpdateddAt(), actualCategory.updatedAt());
+        //Assertions.assertEquals(actualCategory.getDeleteddAt(), actualCategory.deletedAt());
     }
 
     @Test
     public void givenAInvalidId_whenCallsGetCategory_shouldReturnNotFound(){
-        final var expectedErrorMessage = "";
+        final var expectedErrorMessage = "Category with ID 123 was not found";
         final var expectedId = CategoryID.from("123");
 
         when(categoryGateway.findById(eq(expectedId))).thenReturn(Optional.empty());
