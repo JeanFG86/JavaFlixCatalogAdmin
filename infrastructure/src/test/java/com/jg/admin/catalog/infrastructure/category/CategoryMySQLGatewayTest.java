@@ -1,6 +1,7 @@
 package com.jg.admin.catalog.infrastructure.category;
 
 import com.jg.admin.catalog.domain.category.Category;
+import com.jg.admin.catalog.domain.category.CategoryID;
 import com.jg.admin.catalog.infrastructure.MySQLGatewayTest;
 import com.jg.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import com.jg.admin.catalog.infrastructure.category.persistence.CategoryRepository;
@@ -105,6 +106,15 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertEquals(1, categoryRepository.count());
 
         categoryGateway.deleteById(aCategory.getId());
+
+        Assertions.assertEquals(0, categoryRepository.count());
+    }
+
+    @Test
+    public void givenInvalidCategory_whenTryToDeleteIt_shouldDeleteCategory(){
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        categoryGateway.deleteById(CategoryID.from("invalid"));
 
         Assertions.assertEquals(0, categoryRepository.count());
 
