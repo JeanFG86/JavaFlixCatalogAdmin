@@ -43,8 +43,29 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public Pagination<Category> findAll(CategorySearchQuery aQuery) {
-        return null;
+    public Pagination<Category> findAll(final CategorySearchQuery aQuery) {
+        // Paginação
+        final var page = PageRequest.of(
+                aQuery.page(),
+                aQuery.perPage(),
+                Sort.by(Direction.fromString(aQuery.direction()), aQuery.sort())
+        );
+
+        // Busca dinamica pelo criterio terms (name ou description)
+        final var specifications = Optional.ofNullable(aQuery.terms())
+                .filter(str -> !str.isBlank())
+                .map(this::assembleSpecification)
+                .orElse(null);
+
+        final var pageResult =
+                this.repository.findAll(Specification.where(specifications), page);
+
+        return new Pagination<>(
+                pageResult.getNumber(),
+                pageResult.getSize(),
+                pageResult.getTotalElements(),
+                pageResult.map(CategoryJpaEntity::toAggregate).toList()
+        );
     }
 
     private Category save(final Category aCategory){
